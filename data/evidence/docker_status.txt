@@ -1,0 +1,7 @@
+﻿=== Docker Container Status ===
+Date: 2026-08-25 06:30:16
+
+CONTAINER ID   IMAGE         COMMAND                  CREATED         STATUS         PORTS                                         NAMES fe5609c106f6   postgres:16   "docker-entrypoint.sΓÇª"   9 minutes ago   Up 9 minutes   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp   dss150p-postgres
+
+=== Container Logs ===
+PostgreSQL init process complete; ready for start up. 
