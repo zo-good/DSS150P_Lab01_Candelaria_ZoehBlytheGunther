@@ -1,0 +1,8 @@
+=== API INSPECTION EVIDENCE ===
+Retrieved at (UTC): 2026-08-24T23:07:05.989761+00:00
+API URL: https://jsonplaceholder.typicode.com/posts
+HTTP Status: 200
+Content-Type: application/json; charset=utf-8
+Top-level type: list
+Number of records: 100
+Snapshot file: data\raw\api_snapshot.json

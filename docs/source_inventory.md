@@ -64,7 +64,9 @@ This document catalogs all source systems for the DSS150P Lab 01 activity. Each 
 ### 4. REST API
 - **Source Name**: External Data API
 - **Description**: External data source accessed via HTTP
-- **API URL**: [TO BE FILLED from LMS]
+- **API URL**: https://jsonplaceholder.typicode.com/posts (public), http://localhost:8000/api/orders (local fallback)
+- **Last Retrieved (UTC)**: 2026-08-24T23:08:41Z
+- **Last Retrieved (UTC)**: 2026-08-24T23:08:06Z
 - **Data Format**: JSON response
 - **Structure**: Semi-structured
 - **Access Method**: requests.get() with timeout
@@ -103,3 +105,5 @@ This document catalogs all source systems for the DSS150P Lab 01 activity. Each 
 - Retrieve API data and document structure (Task 2.3)
 - Inspect PostgreSQL table structure (Task 2.4)
 - Create data contract based on findings (Task 2.5)
+
+
