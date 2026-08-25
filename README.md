@@ -1,31 +1,38 @@
-# DSS150P Weeks 1–2 Starter Repository
+# DSS150P Lab 01 - Data Engineering Workspace
 
-This repository is intentionally incomplete. You should inspect and extend it,
-not copy a completed pipeline.
+## Laboratory Title
+Data Engineering Lifecycle and Source Systems Assessment
 
-## Included sources
-- `data/customers.csv`
-- `data/orders.json`
-- `data/products.parquet`
-- optional `products_optional_compare.csv` and `.json`
-- `sql/seed_support_tickets.sql`
-- public REST API configured in `src/fetch_api.py`
+## Student Information
+- **Full Name**: Candelaria, Zoeh Blythe Gunther D.
+- **Student Number**: 2024102638
 
-## Quick start
-1. `python -m venv .venv`
-2. Activate the virtual environment.
-3. `pip install -r requirements.txt`
-4. Copy `.env.example` to `.env`.
-5. `docker compose up -d`
-6. Load `sql/seed_support_tickets.sql` into PostgreSQL.
-7. Run the starter scripts.
-8. Extend the code only as required by the laboratory activity.
+## Purpose of the Laboratory
+This laboratory establishes a reproducible local data-engineering workspace and performs a first-pass technical assessment of multiple source systems. The activity demonstrates how source systems, data pipelines, storage platforms, and downstream consumers fit within the data engineering lifecycle. It covers environment setup, source profiling, API inspection, database schema creation, and data contract development.
 
-The starter files intentionally stop before a complete data pipeline.
+## Software Requirements
+- Python 3.x (tested with Python 3.14.7)
+- Git (tested with Git 2.55.0)
+- Docker Desktop with Docker Compose (tested with Docker 29.7.2)
+- Visual Studio Code or any code editor
+- Python packages: pandas, pyarrow, requests, sqlalchemy, psycopg2-binary, pyyaml
 
-## REST API choices
-- Public: `https://jsonplaceholder.typicode.com/posts`
-- Local fallback: run `python src/local_api_server.py`, then call
-  `http://localhost:8000/api/orders`
+## Repository Structure
+DSS150P_Lab01_Candelaria_ZoehBlytheGunther/
+├── data/
+│ ├── raw/ # Raw source files and API snapshot
+│ └── evidence/ # Terminal outputs and verification evidence
+├── docs/ # Documentation and analysis
+├── sql/ # SQL initialization scripts
+├── src/ # Python scripts
+├── .gitignore
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
 
-The local option is useful when your internet access is unreliable.
+## Steps to Reproduce the Environment
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/zo-good/DSS150P_Lab01_Candelaria_ZoehBlytheGunther.git
+cd DSS150P_Lab01_Candelaria_ZoehBlytheGunther
