@@ -1,150 +1,77 @@
-# Data Contract for customers.csv
+# ================================================
+# DATA CONTRACT - customers.csv
+# ================================================
 # Chosen Source: customers.csv
 # Reason: This source serves as master customer data with clear quality issues
 #         (duplicates and missing values) that require formal validation rules,
 #         and it provides the primary key referenced by other sources.
 
-contract:
-  name: customer_master_data
-  version: 1.0.0
-  description: Data contract for customer master data from CSV source
-  created_at: 2026-08-24T23:15:00Z
-  owner: DSS150P Lab 01
+dataset_name: customer_master_data
+version: 1.0
+owner: "unknown - requires confirmation"
+source_type: file
+source_format: csv
+acquisition_method: "File import using pandas.read_csv() from data/raw/ directory"
+expected_update_pattern: "batch"
 
-source:
-  name: customers.csv
-  type: file
-  format: csv
-  location: data/raw/customers.csv
-  delimiter: ","
-  encoding: utf-8
-  has_header: true
+primary_key: customer_id
 
 schema:
-  fields:
-    - name: customer_id
-      type: string
-      required: true
-      unique: true
-      pattern: "^C[0-9]{4}$"
-      description: Unique customer identifier (e.g., C0001)
-      example: "C0001"
-    
-    - name: first_name
-      type: string
-      required: true
-      min_length: 1
-      max_length: 50
-      description: Customer's first name
-      example: "Kevin"
-    
-    - name: last_name
-      type: string
-      required: true
-      min_length: 1
-      max_length: 50
-      description: Customer's last name
-      example: "Bautista"
-    
-    - name: email
-      type: string
-      required: false
-      format: email
-      max_length: 100
-      description: Customer's email address (may be missing)
-      example: "kevin.bautista@example.com"
-      nullability: 1.20% missing
-    
-    - name: city
-      type: string
-      required: false
-      max_length: 50
-      description: Customer's city of residence (may be missing)
-      example: "Pasig"
-      nullability: 0.80% missing
-    
-    - name: signup_date
-      type: date
-      required: true
-      format: "YYYY-MM-DD"
-      description: Date when customer signed up
-      example: "2025-04-27"
-      range:
-        earliest: "2025-01-04"
-        latest: "2026-05-16"
-    
-    - name: customer_segment
-      type: string
-      required: true
-      enum: ["Professional", "Retail", "SME", "Student"]
-      description: Customer segment classification
-      example: "Professional"
+  - name: customer_id
+    type: string
+    nullable: false
+    description: "Unique customer identifier in format C#### (e.g., C0001)"
+  
+  - name: first_name
+    type: string
+    nullable: false
+    description: "Customer's first name"
+  
+  - name: last_name
+    type: string
+    nullable: false
+    description: "Customer's last name"
+  
+  - name: email
+    type: string
+    nullable: true
+    description: "Customer's email address (3 records missing per profiling)"
+  
+  - name: city
+    type: string
+    nullable: true
+    description: "Customer's city of residence (2 records missing per profiling)"
+  
+  - name: signup_date
+    type: date
+    nullable: false
+    description: "Date when customer signed up in YYYY-MM-DD format"
+  
+  - name: customer_segment
+    type: string
+    nullable: false
+    description: "Customer segment classification (Professional, Retail, SME, Student)"
 
 quality_rules:
-  - rule: customer_id_must_be_unique
-    description: Each customer_id must be unique
-    severity: error
-    validation: no_duplicates
-    
-  - rule: customer_id_format
-    description: customer_id must follow pattern C####
-    severity: error
-    pattern: "^C[0-9]{4}$"
-    
-  - rule: no_fully_duplicate_rows
-    description: No two rows should be identical
-    severity: error
-    current_status: 2 duplicates found (0.80%)
-    
-  - rule: email_format_validation
-    description: Email addresses must be valid format when present
-    severity: warning
-    format: email
-    null_allowed: true
-    current_status: 3 missing (1.20%)
-    
-  - rule: city_not_null_for_philippines
-    description: City should be present for local customers
-    severity: warning
-    null_allowed: true
-    current_status: 2 missing (0.80%)
-    
-  - rule: signup_date_valid_range
-    description: Signup dates must be within reasonable range
-    severity: error
-    min: "2025-01-01"
-    max: "2026-12-31"
-    
-  - rule: customer_segment_valid_values
-    description: Customer segment must be one of defined values
-    severity: error
-    allowed_values: ["Professional", "Retail", "SME", "Student"]
+  - "customer_id must not be null"
+  - "customer_id must be unique (247 distinct values found out of 250 rows)"
+  - "customer_id must match pattern ^C[0-9]{4}$"
+  - "signup_date must be in YYYY-MM-DD format"
+  - "signup_date must be between 2025-01-01 and 2026-12-31"
+  - "customer_segment must be one of: Professional, Retail, SME, Student"
+  - "email must be valid email format when not null"
+  - "first_name and last_name must not be empty strings"
 
-constraints:
-  primary_key: customer_id
-  foreign_keys: []
-  indexes:
-    - customer_id
-    - email
-    - city
+freshness_expectation: "unknown - requires confirmation"
+duplicate_policy: "deduplicate"
+schema_evolution_policy: "Reject and notify if columns are added, removed, or renamed. Allow new values in customer_segment after review."
+consumer: "Data engineering pipeline for DSS150P Lab - downstream analytics and reporting"
 
-acquisition:
-  method: file_import
-  tool: pandas
-  function: pd.read_csv
-  frequency: daily_batch
-  expected_delivery_time: "00:00 UTC"
-
-delivery:
-  target_table: customers
-  target_schema: dss150p
-  update_strategy: full_refresh
-  retention: indefinite
-
-versioning:
-  schema_version: 1.0.0
-  contract_version: 1.0.0
-  change_log:
-    - version: 1.0.0
-      date: 2026-08-24
-      change: Initial contract creation
+notes: >
+  Known risks and observations from profiling:
+  - 2 fully duplicated rows (0.80%) require deduplication
+  - 3 missing email addresses (1.20%) and 2 missing cities (0.80%)
+  - signup_date is stored as string and must be parsed to date type
+  - Only 247 distinct customer_id values out of 250 rows indicate duplicate records
+  - Unclear if missing values should be rejected or filled with defaults
+  - Source owner confirmation needed for update frequency and freshness expectations

@@ -3,3 +3,4 @@ pyarrow
 requests
 sqlalchemy
 psycopg2-binary
+pyyaml
